@@ -85,7 +85,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		String user = "student";
 		String pass = "student";
 		Film f = new Film(); 
-		String sql = "SELECT id, first_name, last_name FROM actor WHERE id = ?";
+		String sql = "SELECT id, title, description, release_year, language_id, rental_duration, ";
+			  sql += " rental_rate, length, replacement_cost, rating, special_features "
+						+ " FROM film WHERE id = ?";
 		try {
 		Connection conn = DriverManager.getConnection(URL, user, pass);
 		PreparedStatement stmt = conn.prepareStatement(sql);
@@ -95,6 +97,18 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			actor = new Actor(); // Create the object
 			// Here is our mapping of query columns to our object fields:
 			f.setId(filmResult.getInt(1));
+			f.setTitle(filmResult.getString(2));
+			f.setDescription(filmResult.getString(3)); 
+			f.setReleaseYear(filmResult.getInt(4));
+			f.setLanguageId(filmResult.getInt(5));
+			f.setRentalDuration(filmResult.getInt(6));
+			f.setRentalRate(filmResult.getDouble(7));
+			f.setLength(filmResult.getInt(8));
+			f.setReplacementCost(filmResult.getDouble(9));
+			f.setRating(filmResult.getString(10));
+			f.setSpecialFeatures(filmResult.getString(11));
+			
+			f.setActors(getActorsByFilmId(filmId));
 		}
 		filmResult.close();
 		stmt.close();
@@ -112,18 +126,20 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		List<Actor> actors = new ArrayList<>();
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, pass);
-			String sql = "SELECT id, title, description, release_year, language_id, rental_duration, ";
-			sql += " rental_rate, length, replacement_cost, rating, special_features "
-					+ " FROM film JOIN film_actor ON film.id = film_actor.film_id " + " WHERE actor_id = ?";
+			String sql = "SELECT a.id, a.first_name, a.last_name \n" + 
+					"FROM actor a\n" + 
+					"JOIN film_actor fa\n" + 
+					"ON a.id = fa.actor_id \n" + 
+					"JOIN film f\n" + 
+					"ON f.id = fa.actor_id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			stmt.setInt(1, filmId);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				filmId = rs.getInt(1);
-				int id;
-				String firstName;
-				String lastName;
-				Actor actor = new Actor(filmId, firstName, lastName);
+				int actorId = rs.getInt(1);
+				String firstName = rs.getString(2);
+				String lastName = rs.getString(3);
+				Actor actor = new Actor(actorId, firstName, lastName);
 				actors.add(actor);
 			}
 			rs.close();

@@ -10,16 +10,16 @@ public class Actor {
 	public Actor() {
 		
 	}
-	
-	public int getId() {
-		return id;
-	}
 
 	public Actor(int id, String firstName, String lastName) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
+	}
+	
+	public int getId() {
+		return id;
 	}
 
 	public void setId(int id) {
