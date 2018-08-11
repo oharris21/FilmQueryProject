@@ -15,6 +15,7 @@ public class Film {
 	private double replacementCost;
 	private String rating; 
 	private String specialFeatures;
+	private String language; 
 	private List<Actor> actors = new ArrayList<>(); 
 	
 	public Film() {
@@ -22,7 +23,7 @@ public class Film {
 	}
 	
 	public Film(int id, String title, String description, int releaseYear, int languageId, int rentalDuration,
-			double rentalRate, int length, double replacementCost, String rating, String specialFeatures) {
+			double rentalRate, int length, double replacementCost, String rating, String specialFeatures, String language) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -35,6 +36,15 @@ public class Film {
 		this.replacementCost = replacementCost;
 		this.rating = rating;
 		this.specialFeatures = specialFeatures;
+		this.language = language; 
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	public List<Actor> getActors() {
@@ -138,15 +148,17 @@ public class Film {
 		return "Film [id=" + id + ", title=" + title + ", description=" + description + ", releaseYear=" + releaseYear
 				+ ", languageId=" + languageId + ", rentalDuration=" + rentalDuration + ", rentalRate=" + rentalRate
 				+ ", length=" + length + ", replacementCost=" + replacementCost + ", rating=" + rating
-				+ ", specialFeatures=" + specialFeatures + "]";
+				+ ", specialFeatures=" + specialFeatures + ", language=" + language + "]";
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((actors == null) ? 0 : actors.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + id;
+		result = prime * result + ((language == null) ? 0 : language.hashCode());
 		result = prime * result + languageId;
 		result = prime * result + length;
 		result = prime * result + ((rating == null) ? 0 : rating.hashCode());
@@ -162,6 +174,7 @@ public class Film {
 		return result;
 	}
 
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -171,12 +184,22 @@ public class Film {
 		if (getClass() != obj.getClass())
 			return false;
 		Film other = (Film) obj;
+		if (actors == null) {
+			if (other.actors != null)
+				return false;
+		} else if (!actors.equals(other.actors))
+			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
 		if (id != other.id)
+			return false;
+		if (language == null) {
+			if (other.language != null)
+				return false;
+		} else if (!language.equals(other.language))
 			return false;
 		if (languageId != other.languageId)
 			return false;
