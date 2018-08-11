@@ -13,12 +13,11 @@ import com.skilldistillery.filmquery.entities.Film;
 
 public class DatabaseAccessorObject implements DatabaseAccessor {
 	private static final String URL = "jdbc:mysql://localhost:3306/sdvid?useSSL=false";
+	private Actor actor = null;
+	private String user = "student";
+	private String pass = "student";
 
 	public Actor getActorById(int actorId) {
-		Actor actor = null;
-		String user = "student";
-		String pass = "student";
-
 		String sql = "SELECT id, first_name, last_name FROM actor WHERE id = ?";
 		try {
 		Connection conn = DriverManager.getConnection(URL, user, pass);
@@ -44,8 +43,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 	public List<Film> getFilmsByActorId(int actorId) {
 		List<Film> films = new ArrayList<>();
-		String user = "student";
-		String pass = "student";
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, pass);
 			String sql = "SELECT id, title, description, release_year, language_id, rental_duration, ";
@@ -81,9 +78,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 	@Override
 	public Film getFilmById(int filmId) {
-		Actor actor = null;
-		String user = "student";
-		String pass = "student";
 		Film f = new Film(); 
 		String sql = "SELECT id, title, description, release_year, language_id, rental_duration, ";
 			  sql += " rental_rate, length, replacement_cost, rating, special_features "
@@ -121,8 +115,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 
 	@Override
 	public List<Actor> getActorsByFilmId(int filmId) {
-		String user = "student";
-		String pass = "student";
 		List<Actor> actors = new ArrayList<>();
 		try {
 			Connection conn = DriverManager.getConnection(URL, user, pass);
