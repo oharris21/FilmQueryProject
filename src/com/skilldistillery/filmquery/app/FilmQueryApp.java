@@ -83,13 +83,18 @@ public class FilmQueryApp {
 		if (film.getTitle() == null) {
 			System.out.println("We couldn't find any films with that ID number.");
 		} else {
-			System.out.println(film);
+			System.out.println("\nTitle: " + film.getTitle());
+			System.out.println("Year: " + film.getReleaseYear());
+			System.out.println("Rating: " + film.getRating());
+			System.out.println("Description: " + film.getDescription());
+			System.out.println("Language: " + film.getLanguage());
+			System.out.println("\nActors: ");
 			int id = 0;
 			id = film.getId();
 			List<Actor> a = db.getActorsByFilmId(id);
 			
 			for (Actor act : a) {
-				System.out.println(act.getFirstName() + " " + act.getLastName() + "\n");
+				System.out.println(act.getFirstName() + " " + act.getLastName());
 			}
 		}
 	}
@@ -105,13 +110,20 @@ public class FilmQueryApp {
 		} else {
 			int id = 0;
 			for (Film film : films) {
-				System.out.println(film);
+				System.out.println("\n- - - - - - - - - - - - - - - - - - - - - - -");
+				System.out.println("\nTitle: " + film.getTitle());
+				System.out.println("Year: " + film.getReleaseYear());
+				System.out.println("Rating: " + film.getRating());
+				System.out.println("Description: " + film.getDescription());
+				System.out.println("Language: " + film.getLanguage());
+				System.out.println("\nActors: ");
 				id = film.getId();
 				List<Actor> a = db.getActorsByFilmId(id);
 				
 				for (Actor act : a) {
-					System.out.println(act.getFirstName() + " " + act.getLastName() + "\n");
+					System.out.println(act.getFirstName() + " " + act.getLastName());
 				}
+				System.out.println("- - - - - - - - - - - - - - - - - - - - - - -");
 			}
 		}
 	}
