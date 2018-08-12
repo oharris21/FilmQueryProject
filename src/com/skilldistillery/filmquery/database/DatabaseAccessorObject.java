@@ -150,7 +150,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-//		System.out.println(actors);
 		return actors;
 	}
 
