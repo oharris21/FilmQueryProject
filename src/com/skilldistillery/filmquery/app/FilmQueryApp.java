@@ -47,32 +47,31 @@ public class FilmQueryApp {
 			int idNumber = input.nextInt();
 
 			Film film = db.getFilmById(idNumber);
-			
+
 			if (film.getTitle() == null) {
 				System.out.println("We couldn't find any films with that ID number.");
 			} else {
 				System.out.println(film);
-				for (Actor a : film.getActors()) {
-					System.out.print(a.getFirstName() + " " + a.getLastName() + " ");
-				}
+				int id = 0;
+				id = film.getId();
+				System.out.println(db.getActorsByFilmId(id));
 			}
 			startUserInterface();
 		}
 		if (option.equals("2")) {
 			System.out.print("Enter the keyword: ");
 			String keyword = input.next();
-			
+
 			List<Film> films = db.findFilmByKeyword(keyword);
-			
+
 			if (films.size() == 0) {
 				System.out.println("We couldn't find any films matching your search.");
 			} else {
-				for (Film f : films) {
-					System.out.println(f);
-					List<Actor> actors = f.getActors(); 
-					for (Actor a : actors) {
-						System.out.println(a.getFirstName() + " " + a.getLastName());
-					}
+				int id = 0;
+				for (Film film : films) {
+					System.out.println(film);
+					id = film.getId();
+					System.out.println(db.getActorsByFilmId(id));
 				}
 			}
 			startUserInterface();
@@ -80,7 +79,6 @@ public class FilmQueryApp {
 		if (option.equals("3")) {
 			System.out.println("Bye");
 			System.exit(0);
-			startUserInterface();
 		}
 	}
 }
