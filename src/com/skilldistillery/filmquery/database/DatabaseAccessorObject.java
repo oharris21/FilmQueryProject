@@ -6,7 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.skilldistillery.filmquery.entities.Actor;
 import com.skilldistillery.filmquery.entities.Film;
@@ -17,6 +19,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 	private String pass = "student";
 	Film f = new Film();
 
+	// find actor by their id 
 	public Actor getActorById(int actorId) {
 		String sql = "SELECT id, first_name, last_name FROM actor WHERE id = ?";
 		Actor actor = new Actor();
@@ -40,6 +43,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		return actor;
 	}
 
+	// use an actor's id to find films with them in it 
 	public List<Film> getFilmsByActorId(int actorId) {
 		List<Film> films = new ArrayList<>();
 		try {
@@ -84,9 +88,9 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		return films;
 	}
 
+	// find film by its ID 
 	@Override
 	public Film getFilmById(int filmId) {
-		// need list of actors 
 		String sql = "SELECT film.id, title, description, release_year, language_id, rental_duration,\n" + 
 				"       rental_rate, length, replacement_cost, rating, special_features, name\n" + 
 				"FROM film\n" + 
@@ -112,8 +116,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				f.setSpecialFeatures(filmResult.getString(11));
 				f.setLanguage(filmResult.getString(12));
 
-				// f.setActors(getActorsByFilmId(filmId));
-				
 				List<Actor> actors = getActorsByFilmId(filmId);
 				f.setActors(actors);
 			}
@@ -126,6 +128,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		return f;
 	}
 
+	// get list of actors for each film 
 	@Override
 	public List<Actor> getActorsByFilmId(int filmId) {
 		List<Actor> actors = new ArrayList<>();
@@ -153,6 +156,7 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 		return actors;
 	}
 
+	// keyword search in database 
 	public List<Film> findFilmByKeyword(String keyword) {
 		List<Film> films = new ArrayList<>(); 
 		try {
@@ -186,7 +190,6 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 				
 				List<Actor> actors = getActorsByFilmId(filmId);
 				f.setActors(actors);
-//				System.out.println(actors);
 			}
 			rs.close();
 			stmt.close();
@@ -195,5 +198,62 @@ public class DatabaseAccessorObject implements DatabaseAccessor {
 			e.printStackTrace();
 		}
 		return films;
+	}
+	
+	// method for getting stretch goal 2 from database 
+	public List<String> findCategoryByFilmId (int filmId) {
+		List<String> categories = new ArrayList<>(); 
+		try {
+			Connection conn = DriverManager.getConnection(URL, user, pass);
+			String sql = "SELECT category.name\n" + 
+					"FROM film \n" + 
+					"JOIN film_category\n" + 
+					"ON film.id = film_category.film_id\n" + 
+					"JOIN category \n" + 
+					"ON film_category.category_id = category.id \n" + 
+					"WHERE film.id like ?";
+			PreparedStatement stmt = conn.prepareStatement(sql); 
+			stmt.setInt(1, filmId);
+			ResultSet rs = stmt.executeQuery(); 
+			while (rs.next()) {
+				String category = rs.getString(1);
+//				String category2 = rs.getString(2);
+//				String category3 = rs.getString(3);
+				categories.add(category); 
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return categories; 
+	}
+	
+	// method for getting stretch goal 3 from database
+	public Map<Integer, String> findCopiesAndCondition (int filmId) {
+		Map<Integer, String> copiesAndCondition = new HashMap<Integer, String>(); 
+		try {
+			Connection conn = DriverManager.getConnection(URL, user, pass);
+			String sql = "SELECT inventory_item.id, inventory_item.media_condition\n" + 
+					"FROM film \n" + 
+					"JOIN inventory_item\n" + 
+					"ON film.id = inventory_item.film_id\n" + 
+					"WHERE film.id = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql); 
+			stmt.setInt(1, filmId);
+			ResultSet rs = stmt.executeQuery(); 
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String condition = rs.getString(2); 
+				copiesAndCondition.put(id, condition); 
+			}
+			rs.close();
+			stmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return copiesAndCondition; 
 	}
 }
